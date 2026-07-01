@@ -1,0 +1,100 @@
+aid: useparagon
+name: Paragon
+review:
+  question: Does Paragon expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-01'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Paragon's asynchronous surface is
+    outbound HTTP webhooks (for example, Managed Sync record_updated events
+    and workflow/integration lifecycle events) delivered to application
+    endpoints, plus a Model Context Protocol (MCP) server that uses HTTP SSE
+    for agent transport. Neither is a Paragon-hosted WebSocket API, and the
+    webhook payload catalog is not published in enough detail to model a
+    faithful AsyncAPI channel set at review time.
+findings:
+  summary: |
+    Paragon does not publish a documented public WebSocket (ws:// or wss://)
+    API. Paragon is an embedded integration platform whose developer surface
+    is (1) the Connect SDK and Connect Portal front-ends, and (2) a set of
+    REST/HTTPS APIs across multiple hosts: the Connect API and Proxy API on
+    zeus.useparagon.com (also proxy.useparagon.com), ActionKit on
+    actionkit.useparagon.com, and Managed Sync / Permissions on
+    sync.useparagon.com and managed-sync.useparagon.com. Nearly all requests
+    are authenticated with a Paragon User Token, an RS256-signed JWT signed by
+    the application with a project signing key from the Paragon dashboard and
+    verified by Paragon's public key.
+
+    Paragon's real-time / asynchronous behavior is delivered as outbound HTTP
+    webhooks (e.g. Managed Sync record_updated) rather than a bidirectional
+    WebSocket. Paragon also ships an open-source MCP server (paragon-mcp) that
+    exposes GET /sse and POST /messages for AI-agent transport over HTTP
+    Server-Sent Events; SSE is one-way HTTP streaming, not WebSocket. The SDK
+    and Connect Portal remain the primary, recommended front-end over the API.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://zeus.useparagon.com
+      documented: true
+      note: Connect API, integrations, users, workflow triggers, and proxy.
+    - protocol: REST
+      scheme: https
+      baseURL: https://actionkit.useparagon.com
+      documented: true
+      note: ActionKit list actions and run action.
+    - protocol: REST
+      scheme: https
+      baseURL: https://sync.useparagon.com
+      documented: true
+      note: Managed Sync pipelines; records and permissions on managed-sync.useparagon.com.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Outbound HTTP webhooks (e.g. Managed Sync record_updated, workflow/integration events) to application endpoints. One-directional callbacks, not WebSocket.
+    - protocol: SSE
+      scheme: https
+      documented: true
+      note: The open-source paragon-mcp server exposes GET /sse for MCP agent transport over HTTP Server-Sent Events. Not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented in Paragon's Connect API, ActionKit, Managed Sync, or SDK references as of the review date.
+  endpointsConfirmedRest:
+    - GET  https://zeus.useparagon.com/projects/{projectId}/sdk/me
+    - GET  https://zeus.useparagon.com/projects/{projectId}/sdk/integrations
+    - POST https://zeus.useparagon.com/projects/{projectId}/sdk/resources/{resourceId}/connect
+    - POST https://zeus.useparagon.com/projects/{projectId}/sdk/triggers/{workflowId}
+    - POST https://zeus.useparagon.com/projects/{projectId}/sdk/proxy/{integrationType}/{apiPath}
+    - GET  https://actionkit.useparagon.com/projects/{projectId}/actions
+    - POST https://actionkit.useparagon.com/projects/{projectId}/actions/run
+    - POST https://sync.useparagon.com/api/syncs
+    - GET  https://managed-sync.useparagon.com/sync/{syncId}/records/{recordId}/content
+    - POST https://managed-sync.useparagon.com/permissions/check
+sources:
+  - url: https://docs.useparagon.com/api/making-api-requests
+    type: Documentation
+    note: Connect / Proxy API base host zeus.useparagon.com and /projects/{id}/sdk paths; Paragon User Token (RS256 JWT) auth. No WebSocket mentioned.
+  - url: https://docs.useparagon.com/resources/api-resources
+    type: APIReference
+    note: Integrations and user-state resources; all HTTPS REST.
+  - url: https://docs.useparagon.com/actionkit/overview
+    type: Documentation
+    note: ActionKit GET /actions and POST /actions/run on actionkit.useparagon.com.
+  - url: https://docs.useparagon.com/learn/managed-sync
+    type: Documentation
+    note: Managed Sync (Sync API + Permissions API) with record_updated webhooks; sync.useparagon.com / managed-sync.useparagon.com.
+  - url: https://github.com/useparagon/paragon-mcp
+    type: SourceCode
+    note: Open-source MCP server confirming ZEUS/ACTIONKIT/PROXY base URLs and SSE (not WebSocket) transport for agents.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Paragon's asynchronous surface is
+    outbound HTTP webhooks plus an SSE-based MCP server, both one-directional
+    HTTP transports. An Events and Webhooks API entry was recorded in apis.yml
+    to represent the webhook surface honestly, but no AsyncAPI document was
+    authored because the webhook event catalog is not published in sufficient
+    detail to model faithfully, and nothing here is WebSocket.

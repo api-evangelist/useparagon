@@ -1,0 +1,145 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Paragon
+providerId: useparagon
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- Integration
+- iPaaS
+- Embedded Integrations
+- Workflows
+- ActionKit
+- Managed Sync
+- Plans
+description: >-
+  Paragon is a B2B, sales-led embedded integration platform. Its public pricing is
+  not published as fixed per-call rates; plans are quote-based and organized around
+  the number of production integrations, active connected users, and which products
+  (Connect/Workflows, ActionKit, Managed Sync) are in use. Paragon offers a free
+  developer/trial tier for building in a sandbox and paid Startup / Growth /
+  Enterprise-style tiers negotiated with sales. The tiers below reflect Paragon's
+  documented go-to-market structure, not confirmed list prices.
+notes: >-
+  Paragon does not publish a transparent public price card. Verify current tier
+  names, included integration counts, connected-user limits, and pricing directly
+  with Paragon sales during reconciliation.
+sources:
+- https://www.useparagon.com/pricing
+- https://www.useparagon.com/
+- https://docs.useparagon.com/
+plans:
+- id: useparagon-free
+  name: Free / Developer
+  type: free
+  description: >-
+    No-cost tier for evaluating Paragon, building integrations in a development
+    environment, and testing the Connect SDK, ActionKit, and Managed Sync before
+    going to production.
+  entries:
+  - label: Development Environment
+    name: dev_environment
+    type: flat
+    metric: environment
+    limit: 1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: free
+    userMultiplied: false
+  elements:
+  - name: Connect SDK and Portal
+  - name: Workflow Builder (dev)
+  - name: ActionKit (dev)
+  - name: Managed Sync (dev)
+- id: useparagon-startup
+  name: Startup
+  type: paid
+  description: >-
+    Entry paid tier for early-stage teams shipping their first production
+    integrations, with a capped number of live integrations and connected users.
+  entries:
+  - label: Production Integrations
+    name: production_integrations
+    type: metered
+    metric: integrations
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  - label: Connected Users
+    name: connected_users
+    type: metered
+    metric: users
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: true
+  elements:
+  - name: Production Environment
+  - name: Connect and Workflows
+  - name: ActionKit
+- id: useparagon-growth
+  name: Growth
+  type: paid
+  description: >-
+    Scale tier for teams running many production integrations across a larger
+    connected-user base, with higher limits and additional platform features.
+  entries:
+  - label: Production Integrations
+    name: production_integrations
+    type: metered
+    metric: integrations
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  - label: Connected Users
+    name: connected_users
+    type: metered
+    metric: users
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: true
+  elements:
+  - name: Connect and Workflows
+  - name: ActionKit
+  - name: Managed Sync
+- id: useparagon-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Negotiated agreements for large deployments, including higher integration and
+    user volumes, SSO/SAML, advanced security and compliance (SOC 2, HIPAA
+    availability), on-prem / VPC deployment options, and dedicated support.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Volume Pricing
+  - name: On-Prem / VPC Deployment
+  - name: SSO / SAML
+  - name: SOC 2 / HIPAA
+  - name: Dedicated Support
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

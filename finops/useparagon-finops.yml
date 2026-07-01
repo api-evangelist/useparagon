@@ -1,0 +1,116 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Paragon
+providerId: useparagon
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- Integration
+- iPaaS
+- Embedded Integrations
+- ActionKit
+- Managed Sync
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Paragon spend. Paragon is a sales-led embedded integration
+  platform billed via negotiated subscription tiers rather than transparent
+  per-call rates. The primary cost drivers are the number of production
+  integrations, the count of active connected users, and which products are enabled
+  (Connect/Workflows, ActionKit, Managed Sync). A meaningful secondary cost is the
+  downstream consumption of the third-party APIs Paragon proxies and syncs, which is
+  billed by those providers, not Paragon. This artifact models Paragon usage as
+  metered dimensions so it can be tracked even though list prices are quote-based.
+notes: >-
+  Paragon does not publish public unit prices; meter values below are logical cost
+  dimensions for allocation and forecasting, not confirmed rate cards. Reconcile
+  against your Paragon order form and invoices.
+sources:
+- https://www.useparagon.com/pricing
+- https://docs.useparagon.com/
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Paragon
+serviceCategory: Integration Platform
+billingModel:
+  pricingCategory: Subscription-Based
+  billingFrequency: Annual
+  billingCurrency: USD
+  chargeCategories:
+  - Purchase
+  - Usage
+  - Adjustment
+focusColumns:
+  ServiceName: Paragon
+  ServiceCategory: Integration Platform
+  ProviderName: Paragon
+  PublisherName: Paragon
+  InvoiceIssuerName: Paragon
+  BillingCurrency: USD
+  ChargeCategory: Purchase
+  PricingCategory: Subscription-Based
+meters:
+- name: production_integrations
+  description: Number of live third-party integrations enabled in production.
+  unit: integrations
+  aggregation: max
+  dimensions:
+  - project
+  - integration
+- name: connected_users
+  description: Active end users with at least one connected integration.
+  unit: users
+  aggregation: max
+  dimensions:
+  - project
+  - integration
+- name: workflow_executions
+  description: Workflow runs triggered via events, CRON, webhooks, or the API Trigger.
+  unit: executions
+  aggregation: sum
+  dimensions:
+  - project
+  - workflow
+- name: actionkit_runs
+  description: ActionKit action executions (POST /actions/run) performed for agents.
+  unit: invocations
+  aggregation: sum
+  dimensions:
+  - project
+  - action
+  - provider
+- name: managed_sync_records
+  description: Records ingested and kept current through Managed Sync pipelines.
+  unit: records
+  aggregation: sum
+  dimensions:
+  - project
+  - integration
+  - pipeline
+- name: proxy_requests
+  description: Passthrough proxy calls to connected third-party APIs.
+  unit: requests
+  aggregation: sum
+  dimensions:
+  - project
+  - integration
+principles:
+- name: Visibility
+  description: Track connected-user counts and production integration counts per project against the contracted tier.
+- name: Allocation
+  description: Tag workflows, ActionKit actions, and syncs per customer/team to map Paragon cost to internal cost centers.
+- name: Optimization
+  description: Retire unused integrations, prune idle connected users, and prefer Managed Sync over high-frequency Proxy polling to reduce downstream provider costs.
+- name: Accountability
+  description: Assign owners per integration/pipeline and review connected-user growth against the plan ceiling before renewal.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

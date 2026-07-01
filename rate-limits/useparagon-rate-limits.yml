@@ -1,0 +1,70 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Paragon
+providerId: useparagon
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- Integration
+- iPaaS
+- Embedded Integrations
+- ActionKit
+- Managed Sync
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  Paragon does not publish a single, transparent public rate-limit table. Because
+  Paragon is an embedded integration platform, effective throughput is bounded by
+  two layers: (1) Paragon's own per-project limits on Connect API, ActionKit, and
+  Managed Sync calls, which vary by plan and are raised for Enterprise agreements;
+  and (2) the rate limits of the underlying third-party APIs being proxied or
+  synced (e.g. Salesforce, Slack, HubSpot), which Paragon surfaces back to callers.
+  Managed Sync additionally manages its own ingestion concurrency, backfill pacing,
+  and automatic retry/backoff on behalf of the application.
+notes: >-
+  Specific per-plan RPS/RPM values for the Connect API, ActionKit run endpoint, and
+  Managed Sync are not published; confirm with Paragon during reconciliation.
+  Downstream provider limits are provider-specific and passed through by the Proxy
+  API.
+sources:
+- https://docs.useparagon.com/api/making-api-requests
+- https://docs.useparagon.com/actionkit/overview
+- https://docs.useparagon.com/learn/managed-sync
+responseCodes:
+  throttled: 429
+limits:
+- name: Connect API Requests
+  scope: project
+  metric: requests
+  limit: see provider documentation
+  notes: Per-project limits on zeus.useparagon.com SDK endpoints; varies by plan.
+- name: ActionKit Run Requests
+  scope: project
+  metric: requests
+  limit: see provider documentation
+  notes: Rate on POST /projects/{id}/actions/run; downstream provider limits also apply.
+- name: Proxy API Requests
+  scope: user
+  metric: requests
+  limit: bounded by third-party provider
+  notes: Proxied calls are subject to the connected third-party API's own rate limits.
+- name: Managed Sync Ingestion
+  scope: project
+  metric: records
+  limit: managed by Paragon
+  notes: Backfill pacing, incremental sync concurrency, and retry/backoff are handled by Paragon.
+policies:
+- name: Tiered Limits
+  description: Per-project limits are raised as accounts move from Startup to Growth to Enterprise agreements.
+- name: Downstream Passthrough
+  description: Proxy and ActionKit requests inherit and surface the underlying third-party API rate limits.
+- name: Managed Backoff
+  description: Managed Sync automatically retries with backoff and recovers from third-party failures during backfill and incremental syncs.
+- name: Client Backoff
+  description: Clients should implement exponential backoff with jitter and honor Retry-After on 429 responses.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

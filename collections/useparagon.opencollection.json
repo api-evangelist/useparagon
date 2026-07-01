@@ -1,0 +1,219 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Paragon API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{paragonUserToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Connect API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the authenticated user and integration state",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://zeus.useparagon.com/projects/{{projectId}}/sdk/me"
+          },
+          "docs": "Returns the currently authenticated Paragon user and the state of each connected integration."
+        },
+        {
+          "info": {
+            "name": "List integrations enabled for the project",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://zeus.useparagon.com/projects/{{projectId}}/sdk/integrations"
+          },
+          "docs": "Lists the integrations enabled for the project, including Connect Portal configuration and workflows."
+        },
+        {
+          "info": {
+            "name": "Connect a user credential to a resource",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://zeus.useparagon.com/projects/{{projectId}}/sdk/resources/{{resourceId}}/connect",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Connects the authenticated user's credentials to a Paragon resource / integration."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Workflows",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Trigger a workflow (API Trigger)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://zeus.useparagon.com/projects/{{projectId}}/sdk/triggers/{{workflowId}}",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Triggers a workflow configured with an API Trigger for the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Get workflow execution status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://zeus.useparagon.com/projects/{{projectId}}/sdk/workflows/{{workflowId}}/executions/{{executionId}}"
+          },
+          "docs": "Returns the status and result metadata for a specific workflow execution."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Proxy API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Proxy a request to a connected third-party API",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://zeus.useparagon.com/projects/{{projectId}}/sdk/proxy/{{integrationType}}/{{apiPath}}",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Forwards a request to the connected user's third-party API; Paragon injects the stored credentials."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "ActionKit",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List available ActionKit actions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://actionkit.useparagon.com/projects/{{projectId}}/actions"
+          },
+          "docs": "Returns the catalog of prebuilt, LLM-ready actions available to the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Run an ActionKit action",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://actionkit.useparagon.com/projects/{{projectId}}/actions/run",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"action\": \"SLACK_SEND_MESSAGE\",\n  \"parameters\": {\n    \"channel\": \"C0123456789\",\n    \"text\": \"Hello from ActionKit\"\n  }\n}"
+            }
+          },
+          "docs": "Executes a single prebuilt action by name with action-specific parameters."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Managed Sync",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a Managed Sync pipeline",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sync.useparagon.com/api/syncs",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"integration\": \"salesforce\",\n  \"pipeline\": \"crm\",\n  \"configuration\": {}\n}"
+            }
+          },
+          "docs": "Enables a fully managed, normalized ingestion pipeline for the user's connected integration."
+        },
+        {
+          "info": {
+            "name": "List normalized records for a sync",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://managed-sync.useparagon.com/sync/{{syncId}}/records"
+          },
+          "docs": "Returns a page of normalized, unified records ingested by the sync pipeline."
+        },
+        {
+          "info": {
+            "name": "Get the content of a synced record",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://managed-sync.useparagon.com/sync/{{syncId}}/records/{{recordId}}/content"
+          },
+          "docs": "Retrieves the underlying content for a single normalized record."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Permissions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Check access to a synced object",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://managed-sync.useparagon.com/permissions/check",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"object\": \"account_123\",\n  \"user\": \"user_456\",\n  \"role\": \"viewer\"\n}"
+            }
+          },
+          "docs": "Evaluates whether a given user/role can access a specific object in the source system."
+        }
+      ]
+    }
+  ]
+}
