@@ -1,0 +1,16 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/useparagon-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: ParagonUserToken
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  description: 'A Paragon User Token: an RS256-signed JWT whose subject identifies the end user.
+    Sign it with the private signing key from Settings > SDK Setup in the Paragon dashboard;
+    Paragon verifies it with the matching public key.'
+  sources:
+  - openapi/useparagon-openapi.yml

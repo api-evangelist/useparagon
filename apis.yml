@@ -225,6 +225,10 @@ apis:
     data. This surface is webhook/event-driven rather than a request/response REST
     resource.
 common:
+- type: DomainSecurity
+  url: security/useparagon-domain-security.yml
+- type: Authentication
+  url: authentication/useparagon-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/useparagon
 - type: LinkedIn
@@ -239,6 +243,8 @@ common:
   url: rate-limits/useparagon-rate-limits.yml
 - type: FinOps
   url: finops/useparagon-finops.yml
+- url: https://www.useparagon.com/blog
+  type: Blog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
