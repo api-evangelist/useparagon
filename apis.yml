@@ -225,6 +225,8 @@ apis:
     data. This surface is webhook/event-driven rather than a request/response REST
     resource.
 common:
+- type: AgenticAccess
+  url: agentic-access/useparagon-agentic-access.yml
 - type: DomainSecurity
   url: security/useparagon-domain-security.yml
 - type: Authentication
