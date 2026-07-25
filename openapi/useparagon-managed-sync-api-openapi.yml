@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: Paragon ActionKit Managed Sync API
+  description: 'Unofficial, community-authored OpenAPI description of Paragon''s embedded integration platform APIs, compiled by API Evangelist from Paragon''s public documentation. Paragon exposes several distinct API surfaces across different hosts: the Connect API (zeus.useparagon.com) for managing authenticated users, connected credentials, integrations, workflow triggers, and proxied third-party requests; ActionKit (actionkit.useparagon.com) for listing and running prebuilt LLM-ready actions; and Managed Sync (sync.useparagon.com / managed-sync.useparagon.com) for normalized third-party data ingestion and permission checks.
+
+    Nearly all requests are authenticated with a Paragon User Token, an RS256-signed JWT that your application signs with the private signing key from the Paragon dashboard (Settings > SDK Setup) and that Paragon verifies with the matching public key. In production most developers use Paragon''s Connect SDK and Connect Portal, which sit in front of this API; the raw HTTP surface documented here is used for server-side and headless integrations.
+
+    Endpoint paths and payloads are approximate representations of Paragon''s documented behavior and should be verified against the official docs.'
+  version: '1.0'
+  contact:
+    name: Paragon Support
+    url: https://docs.useparagon.com/
+  termsOfService: https://www.useparagon.com/legal/terms-of-service
+servers:
+- url: https://zeus.useparagon.com
+  description: Connect API (users, credentials, integrations, workflow triggers, proxy)
+- url: https://actionkit.useparagon.com
+  description: ActionKit API (list and run prebuilt actions)
+- url: https://proxy.useparagon.com
+  description: Proxy API (alternate host for passthrough third-party requests)
+- url: https://sync.useparagon.com
+  description: Managed Sync API (data ingestion pipelines)
+- url: https://managed-sync.useparagon.com
+  description: Managed Sync records and Permissions API
+security:
+- ParagonUserToken: []
+tags:
+- name: Managed Sync
+  description: Normalized third-party data ingestion pipelines and records.
+paths:
+  /api/syncs:
+    post:
+      operationId: createSync
+      tags:
+      - Managed Sync
+      summary: Create a Managed Sync pipeline
+      description: Enables a fully managed, normalized ingestion pipeline for the authenticated user's connected integration (CRM, ticketing, file storage, or accounting). Paragon performs an initial backfill and then keeps data current with incremental syncs, emitting record_updated webhooks on change.
+      servers:
+      - url: https://sync.useparagon.com
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSyncRequest'
+      responses:
+        '201':
+          description: The created sync pipeline.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sync'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      operationId: listSyncs
+      tags:
+      - Managed Sync
+      summary: List Managed Sync pipelines
+      description: Lists the sync pipelines configured for the authenticated user.
+      servers:
+      - url: https://sync.useparagon.com
+      responses:
+        '200':
+          description: The list of syncs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sync'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /sync/{syncId}/records:
+    get:
+      operationId: listSyncRecords
+      tags:
+      - Managed Sync
+      summary: List normalized records for a sync
+      description: Returns a page of normalized, unified records ingested by the given sync pipeline. Use the returned cursor to page through the full replica.
+      servers:
+      - url: https://managed-sync.useparagon.com
+      parameters:
+      - name: syncId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 100
+      responses:
+        '200':
+          description: A page of normalized records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /sync/{syncId}/records/{recordId}/content:
+    get:
+      operationId: getRecordContent
+      tags:
+      - Managed Sync
+      summary: Get the content of a synced record
+      description: Retrieves the underlying content for a single normalized record (for example, the file body for a file-storage ingestion).
+      servers:
+      - url: https://managed-sync.useparagon.com
+      parameters:
+      - name: syncId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: recordId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The record content.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    RecordPage:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        nextCursor:
+          type: string
+          nullable: true
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+    CreateSyncRequest:
+      type: object
+      required:
+      - integration
+      - pipeline
+      properties:
+        integration:
+          type: string
+          description: The integration type to sync (e.g. salesforce).
+        pipeline:
+          type: string
+          description: The named ingestion pipeline (e.g. crm, tickets, files, accounting).
+        configuration:
+          type: object
+          additionalProperties: true
+    Sync:
+      type: object
+      properties:
+        id:
+          type: string
+        integration:
+          type: string
+        pipeline:
+          type: string
+        status:
+          type: string
+          enum:
+          - INITIALIZING
+          - BACKFILLING
+          - ACTIVE
+          - PAUSED
+          - ERROR
+        createdAt:
+          type: string
+          format: date-time
+  responses:
+    Unauthorized:
+      description: Missing or invalid Paragon User Token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    ParagonUserToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'A Paragon User Token: an RS256-signed JWT whose subject identifies the end user. Sign it with the private signing key from Settings > SDK Setup in the Paragon dashboard; Paragon verifies it with the matching public key.'

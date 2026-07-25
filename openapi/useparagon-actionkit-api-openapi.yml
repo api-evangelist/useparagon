@@ -1,0 +1,155 @@
+openapi: 3.0.3
+info:
+  title: Paragon ActionKit API
+  description: 'Unofficial, community-authored OpenAPI description of Paragon''s embedded integration platform APIs, compiled by API Evangelist from Paragon''s public documentation. Paragon exposes several distinct API surfaces across different hosts: the Connect API (zeus.useparagon.com) for managing authenticated users, connected credentials, integrations, workflow triggers, and proxied third-party requests; ActionKit (actionkit.useparagon.com) for listing and running prebuilt LLM-ready actions; and Managed Sync (sync.useparagon.com / managed-sync.useparagon.com) for normalized third-party data ingestion and permission checks.
+
+    Nearly all requests are authenticated with a Paragon User Token, an RS256-signed JWT that your application signs with the private signing key from the Paragon dashboard (Settings > SDK Setup) and that Paragon verifies with the matching public key. In production most developers use Paragon''s Connect SDK and Connect Portal, which sit in front of this API; the raw HTTP surface documented here is used for server-side and headless integrations.
+
+    Endpoint paths and payloads are approximate representations of Paragon''s documented behavior and should be verified against the official docs.'
+  version: '1.0'
+  contact:
+    name: Paragon Support
+    url: https://docs.useparagon.com/
+  termsOfService: https://www.useparagon.com/legal/terms-of-service
+servers:
+- url: https://zeus.useparagon.com
+  description: Connect API (users, credentials, integrations, workflow triggers, proxy)
+- url: https://actionkit.useparagon.com
+  description: ActionKit API (list and run prebuilt actions)
+- url: https://proxy.useparagon.com
+  description: Proxy API (alternate host for passthrough third-party requests)
+- url: https://sync.useparagon.com
+  description: Managed Sync API (data ingestion pipelines)
+- url: https://managed-sync.useparagon.com
+  description: Managed Sync records and Permissions API
+security:
+- ParagonUserToken: []
+tags:
+- name: ActionKit
+  description: Prebuilt, LLM-ready actions across connected SaaS providers.
+paths:
+  /projects/{projectId}/actions:
+    get:
+      operationId: listActions
+      tags:
+      - ActionKit
+      summary: List available ActionKit actions
+      description: Returns the catalog of prebuilt, LLM-ready actions available to the authenticated user across their connected integrations. The response is designed to be handed to an AI agent as tool definitions.
+      servers:
+      - url: https://actionkit.useparagon.com
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - name: categories
+        in: query
+        required: false
+        description: Optional filter limiting the actions returned by category or provider.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The list of available actions and their JSON schemas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /projects/{projectId}/actions/run:
+    post:
+      operationId: runAction
+      tags:
+      - ActionKit
+      summary: Run an ActionKit action
+      description: Executes a single prebuilt action for the authenticated user by name (for example, `SLACK_SEND_MESSAGE`) with the action-specific parameters. Paragon returns the API response of the last underlying request used to run the action; the response shape varies by provider.
+      servers:
+      - url: https://actionkit.useparagon.com
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunActionRequest'
+      responses:
+        '200':
+          description: The result of running the action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunActionResponse'
+        '400':
+          description: Invalid action name or parameters.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+    RunActionResponse:
+      type: object
+      description: The provider API response of the last request used to run the action.
+      additionalProperties: true
+    ActionList:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+    Action:
+      type: object
+      properties:
+        name:
+          type: string
+          example: SLACK_SEND_MESSAGE
+        description:
+          type: string
+        provider:
+          type: string
+          example: slack
+        parameters:
+          type: object
+          description: JSON Schema for the action's parameters.
+          additionalProperties: true
+    RunActionRequest:
+      type: object
+      required:
+      - action
+      - parameters
+      properties:
+        action:
+          type: string
+          example: SLACK_SEND_MESSAGE
+        parameters:
+          type: object
+          additionalProperties: true
+          example:
+            channel: C0123456789
+            text: Hello from ActionKit
+  responses:
+    Unauthorized:
+      description: Missing or invalid Paragon User Token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      description: The Paragon project identifier.
+      schema:
+        type: string
+  securitySchemes:
+    ParagonUserToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'A Paragon User Token: an RS256-signed JWT whose subject identifies the end user. Sign it with the private signing key from Settings > SDK Setup in the Paragon dashboard; Paragon verifies it with the matching public key.'

@@ -1,0 +1,98 @@
+openapi: 3.0.3
+info:
+  title: Paragon ActionKit Proxy API
+  description: 'Unofficial, community-authored OpenAPI description of Paragon''s embedded integration platform APIs, compiled by API Evangelist from Paragon''s public documentation. Paragon exposes several distinct API surfaces across different hosts: the Connect API (zeus.useparagon.com) for managing authenticated users, connected credentials, integrations, workflow triggers, and proxied third-party requests; ActionKit (actionkit.useparagon.com) for listing and running prebuilt LLM-ready actions; and Managed Sync (sync.useparagon.com / managed-sync.useparagon.com) for normalized third-party data ingestion and permission checks.
+
+    Nearly all requests are authenticated with a Paragon User Token, an RS256-signed JWT that your application signs with the private signing key from the Paragon dashboard (Settings > SDK Setup) and that Paragon verifies with the matching public key. In production most developers use Paragon''s Connect SDK and Connect Portal, which sit in front of this API; the raw HTTP surface documented here is used for server-side and headless integrations.
+
+    Endpoint paths and payloads are approximate representations of Paragon''s documented behavior and should be verified against the official docs.'
+  version: '1.0'
+  contact:
+    name: Paragon Support
+    url: https://docs.useparagon.com/
+  termsOfService: https://www.useparagon.com/legal/terms-of-service
+servers:
+- url: https://zeus.useparagon.com
+  description: Connect API (users, credentials, integrations, workflow triggers, proxy)
+- url: https://actionkit.useparagon.com
+  description: ActionKit API (list and run prebuilt actions)
+- url: https://proxy.useparagon.com
+  description: Proxy API (alternate host for passthrough third-party requests)
+- url: https://sync.useparagon.com
+  description: Managed Sync API (data ingestion pipelines)
+- url: https://managed-sync.useparagon.com
+  description: Managed Sync records and Permissions API
+security:
+- ParagonUserToken: []
+tags:
+- name: Proxy
+  description: Passthrough requests to a connected user's third-party API.
+paths:
+  /projects/{projectId}/sdk/proxy/{integrationType}/{apiPath}:
+    post:
+      operationId: proxyRequest
+      tags:
+      - Proxy
+      summary: Proxy a request to a connected third-party API
+      description: Forwards a request to the connected user's third-party API for the given integration type (for example, `salesforce` or `slack`) at the given provider path. Paragon injects the user's stored OAuth credentials so your application never handles the third-party token. GET, PUT, PATCH, and DELETE are also supported against the same path. Also reachable at https://proxy.useparagon.com.
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - name: integrationType
+        in: path
+        required: true
+        description: The integration type slug (e.g. salesforce, slack, googledrive).
+        schema:
+          type: string
+      - name: apiPath
+        in: path
+        required: true
+        description: The third-party provider API path to call (may contain slashes).
+        schema:
+          type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The proxied response from the third-party API.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      description: The Paragon project identifier.
+      schema:
+        type: string
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid Paragon User Token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    ParagonUserToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'A Paragon User Token: an RS256-signed JWT whose subject identifies the end user. Sign it with the private signing key from Settings > SDK Setup in the Paragon dashboard; Paragon verifies it with the matching public key.'

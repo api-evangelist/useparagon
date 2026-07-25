@@ -1,0 +1,109 @@
+openapi: 3.0.3
+info:
+  title: Paragon ActionKit Connect API
+  description: 'Unofficial, community-authored OpenAPI description of Paragon''s embedded integration platform APIs, compiled by API Evangelist from Paragon''s public documentation. Paragon exposes several distinct API surfaces across different hosts: the Connect API (zeus.useparagon.com) for managing authenticated users, connected credentials, integrations, workflow triggers, and proxied third-party requests; ActionKit (actionkit.useparagon.com) for listing and running prebuilt LLM-ready actions; and Managed Sync (sync.useparagon.com / managed-sync.useparagon.com) for normalized third-party data ingestion and permission checks.
+
+    Nearly all requests are authenticated with a Paragon User Token, an RS256-signed JWT that your application signs with the private signing key from the Paragon dashboard (Settings > SDK Setup) and that Paragon verifies with the matching public key. In production most developers use Paragon''s Connect SDK and Connect Portal, which sit in front of this API; the raw HTTP surface documented here is used for server-side and headless integrations.
+
+    Endpoint paths and payloads are approximate representations of Paragon''s documented behavior and should be verified against the official docs.'
+  version: '1.0'
+  contact:
+    name: Paragon Support
+    url: https://docs.useparagon.com/
+  termsOfService: https://www.useparagon.com/legal/terms-of-service
+servers:
+- url: https://zeus.useparagon.com
+  description: Connect API (users, credentials, integrations, workflow triggers, proxy)
+- url: https://actionkit.useparagon.com
+  description: ActionKit API (list and run prebuilt actions)
+- url: https://proxy.useparagon.com
+  description: Proxy API (alternate host for passthrough third-party requests)
+- url: https://sync.useparagon.com
+  description: Managed Sync API (data ingestion pipelines)
+- url: https://managed-sync.useparagon.com
+  description: Managed Sync records and Permissions API
+security:
+- ParagonUserToken: []
+tags:
+- name: Connect
+  description: Authenticated users and connected third-party credentials.
+paths:
+  /projects/{projectId}/sdk/resources/{resourceId}/connect:
+    post:
+      operationId: connectResource
+      tags:
+      - Connect
+      summary: Connect a user credential to a resource
+      description: Connects the authenticated user's credentials to a Paragon resource / integration. This is the server-side equivalent of initiating a connection through the Connect Portal.
+      parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - name: resourceId
+        in: path
+        required: true
+        description: The Paragon resource (integration) identifier.
+        schema:
+          type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectResourceRequest'
+      responses:
+        '200':
+          description: The resulting credential / connection state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credential'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Credential:
+      type: object
+      properties:
+        id:
+          type: string
+        provider:
+          type: string
+        status:
+          type: string
+          enum:
+          - VALID
+          - INVALID
+        createdAt:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+    ConnectResourceRequest:
+      type: object
+      additionalProperties: true
+      description: Optional connection configuration for the resource.
+  responses:
+    Unauthorized:
+      description: Missing or invalid Paragon User Token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      description: The Paragon project identifier.
+      schema:
+        type: string
+  securitySchemes:
+    ParagonUserToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'A Paragon User Token: an RS256-signed JWT whose subject identifies the end user. Sign it with the private signing key from Settings > SDK Setup in the Paragon dashboard; Paragon verifies it with the matching public key.'
