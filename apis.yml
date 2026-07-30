@@ -7,7 +7,20 @@ description: Paragon is an embedded integration platform (embedded iPaaS) that l
   product. Developers use the Connect SDK/Portal plus a REST API (Connect API,
   ActionKit, and Managed Sync) to authenticate end users into 130+ SaaS providers,
   trigger workflows, run agentic actions, and ingest normalized third-party data.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/useparagon.png
 tags:
 - Integration
 - iPaaS
@@ -20,210 +33,230 @@ created: '2026-07-01'
 modified: '2026-07-01'
 specificationVersion: '0.19'
 apis:
-- aid: useparagon:paragon-connect-api
-  name: Paragon Connect API
-  tags:
-  - Connect
-  - Authentication
-  - Credentials
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.useparagon.com/api/making-api-requests
-  baseURL: https://zeus.useparagon.com
-  properties:
-  - url: https://docs.useparagon.com/api/making-api-requests
-    type: Documentation
-  - url: https://docs.useparagon.com/resources/api-resources
-    type: APIReference
-  - url: openapi/useparagon-openapi.yml
-    type: OpenAPI
-  - url: collections/useparagon.postman_collection.json
-    type: PostmanCollection
-  - url: collections/useparagon.opencollection.json
-    type: OpenCollection
-  description: The Connect API manages authenticated end users and their connected
-    third-party credentials for a Paragon project. Requests are authenticated with a
-    Paragon User Token (an RS256-signed JWT) and target
-    /projects/{projectId}/sdk/... paths for resource connection and user state. In
-    practice the Connect SDK and Connect Portal are the primary front-ends over this
-    API.
-- aid: useparagon:paragon-integrations-api
-  name: Paragon Integrations API
-  tags:
-  - Integrations
-  - Connectors
-  - Metadata
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.useparagon.com/resources/api-resources
-  baseURL: https://zeus.useparagon.com
-  properties:
-  - url: https://docs.useparagon.com/resources/api-resources
-    type: Documentation
-  - url: openapi/useparagon-openapi.yml
-    type: OpenAPI
-  - url: collections/useparagon.postman_collection.json
-    type: PostmanCollection
-  - url: collections/useparagon.opencollection.json
-    type: OpenCollection
-  description: Returns the list of integrations enabled for a Paragon project,
-    including Connect Portal configuration and associated workflows, so applications
-    can render available connectors and their state.
-- aid: useparagon:paragon-users-api
-  name: Paragon Users API
-  tags:
-  - Users
-  - Connected Accounts
-  - State
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.useparagon.com/resources/api-resources
-  baseURL: https://zeus.useparagon.com
-  properties:
-  - url: https://docs.useparagon.com/resources/api-resources
-    type: Documentation
-  - url: openapi/useparagon-openapi.yml
-    type: OpenAPI
-  - url: collections/useparagon.postman_collection.json
-    type: PostmanCollection
-  - url: collections/useparagon.opencollection.json
-    type: OpenCollection
-  description: Retrieves the currently authenticated user and their connected
-    integration state (the same data surfaced by the SDK getUser() method), keyed by
-    the user id embedded in the Paragon User Token.
-- aid: useparagon:paragon-workflows-api
-  name: Paragon Workflows API
-  tags:
-  - Workflows
-  - Triggers
-  - Automation
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.useparagon.com/workflows/triggers
-  baseURL: https://zeus.useparagon.com
-  properties:
-  - url: https://docs.useparagon.com/workflows/triggers
-    type: Documentation
-  - url: openapi/useparagon-openapi.yml
-    type: OpenAPI
-  - url: collections/useparagon.postman_collection.json
-    type: PostmanCollection
-  - url: collections/useparagon.opencollection.json
-    type: OpenCollection
-  description: Triggers Paragon workflows over HTTP (API Trigger) and checks workflow
-    execution status. Workflows can be started from application events, CRON
-    schedules, third-party webhooks, or an authenticated HTTP request carrying a
-    Paragon User Token.
-- aid: useparagon:paragon-proxy-api
-  name: Paragon Proxy API
-  tags:
-  - Proxy
-  - Passthrough
-  - Third-Party APIs
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.useparagon.com/api/making-api-requests
-  baseURL: https://zeus.useparagon.com
-  properties:
-  - url: https://docs.useparagon.com/api/making-api-requests
-    type: Documentation
-  - url: openapi/useparagon-openapi.yml
-    type: OpenAPI
-  - url: collections/useparagon.postman_collection.json
-    type: PostmanCollection
-  - url: collections/useparagon.opencollection.json
-    type: OpenCollection
-  description: A passthrough proxy that forwards requests to a connected user's
-    third-party API without your application handling that provider's OAuth tokens.
-    Requests go to /projects/{projectId}/sdk/proxy/{integrationType}/{apiPath} and
-    Paragon injects the user's stored credentials. Also available at
-    proxy.useparagon.com.
-- aid: useparagon:paragon-actionkit-api
+- aid: useparagon:useparagon-actionkit-api
   name: Paragon ActionKit API
+  description: Prebuilt, LLM-ready actions across connected SaaS providers.
+  humanURL: https://docs.useparagon.com/api/making-api-requests
+  baseURL: https://zeus.useparagon.com
   tags:
   - ActionKit
-  - AI Agents
-  - Actions
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.useparagon.com/actionkit/overview
-  baseURL: https://actionkit.useparagon.com
   properties:
-  - url: https://docs.useparagon.com/actionkit/overview
-    type: Documentation
-  - url: openapi/useparagon-openapi.yml
-    type: OpenAPI
-  - url: collections/useparagon.postman_collection.json
-    type: PostmanCollection
-  - url: collections/useparagon.opencollection.json
-    type: OpenCollection
-  description: ActionKit exposes thousands of prebuilt, LLM-ready actions across
-    130+ SaaS providers as a single API for AI agents. List available actions with
-    GET /projects/{projectId}/actions and execute one with POST
-    /projects/{projectId}/actions/run by passing an action name (e.g.
-    SLACK_SEND_MESSAGE) and parameters.
-- aid: useparagon:paragon-managed-sync-api
+  - type: OpenAPI
+    url: openapi/useparagon-actionkit-api-openapi.yml
+  - type: Documentation
+    url: https://docs.useparagon.com/api/making-api-requests
+  - type: APIReference
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: PostmanCollection
+    url: collections/useparagon.postman_collection.json
+  - type: OpenCollection
+    url: collections/useparagon.opencollection.json
+  - type: Documentation
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: Documentation
+    url: https://docs.useparagon.com/workflows/triggers
+  - type: Documentation
+    url: https://docs.useparagon.com/actionkit/overview
+  - type: Documentation
+    url: https://docs.useparagon.com/learn/managed-sync
+  - type: Documentation
+    url: https://www.useparagon.com/product/permissions-api
+- aid: useparagon:useparagon-connect-api
+  name: Paragon Connect API
+  description: Authenticated users and connected third-party credentials.
+  humanURL: https://docs.useparagon.com/api/making-api-requests
+  baseURL: https://zeus.useparagon.com
+  tags:
+  - Connect
+  properties:
+  - type: OpenAPI
+    url: openapi/useparagon-connect-api-openapi.yml
+  - type: Documentation
+    url: https://docs.useparagon.com/api/making-api-requests
+  - type: APIReference
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: PostmanCollection
+    url: collections/useparagon.postman_collection.json
+  - type: OpenCollection
+    url: collections/useparagon.opencollection.json
+  - type: Documentation
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: Documentation
+    url: https://docs.useparagon.com/workflows/triggers
+  - type: Documentation
+    url: https://docs.useparagon.com/actionkit/overview
+  - type: Documentation
+    url: https://docs.useparagon.com/learn/managed-sync
+  - type: Documentation
+    url: https://www.useparagon.com/product/permissions-api
+- aid: useparagon:useparagon-integrations-api
+  name: Paragon Integrations API
+  description: Integrations enabled for a Paragon project.
+  humanURL: https://docs.useparagon.com/api/making-api-requests
+  baseURL: https://zeus.useparagon.com
+  tags:
+  - Integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/useparagon-integrations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.useparagon.com/api/making-api-requests
+  - type: APIReference
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: PostmanCollection
+    url: collections/useparagon.postman_collection.json
+  - type: OpenCollection
+    url: collections/useparagon.opencollection.json
+  - type: Documentation
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: Documentation
+    url: https://docs.useparagon.com/workflows/triggers
+  - type: Documentation
+    url: https://docs.useparagon.com/actionkit/overview
+  - type: Documentation
+    url: https://docs.useparagon.com/learn/managed-sync
+  - type: Documentation
+    url: https://www.useparagon.com/product/permissions-api
+- aid: useparagon:useparagon-managed-sync-api
   name: Paragon Managed Sync API
+  description: Normalized third-party data ingestion pipelines and records.
+  humanURL: https://docs.useparagon.com/api/making-api-requests
+  baseURL: https://zeus.useparagon.com
   tags:
   - Managed Sync
-  - Data Ingestion
-  - CDC
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.useparagon.com/learn/managed-sync
-  baseURL: https://sync.useparagon.com
   properties:
-  - url: https://docs.useparagon.com/learn/managed-sync
-    type: Documentation
-  - url: openapi/useparagon-openapi.yml
-    type: OpenAPI
-  - url: collections/useparagon.postman_collection.json
-    type: PostmanCollection
-  - url: collections/useparagon.opencollection.json
-    type: OpenCollection
-  description: Managed Sync provides fully managed, normalized third-party data
-    ingestion pipelines. The Sync API enables full CRM, ticketing, file-storage, and
-    accounting ingestions with a couple of calls (create sync, pull records) plus
-    record_updated webhooks for change data capture; requests target
-    sync.useparagon.com / managed-sync.useparagon.com.
-- aid: useparagon:paragon-permissions-api
+  - type: OpenAPI
+    url: openapi/useparagon-managed-sync-api-openapi.yml
+  - type: Documentation
+    url: https://docs.useparagon.com/api/making-api-requests
+  - type: APIReference
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: PostmanCollection
+    url: collections/useparagon.postman_collection.json
+  - type: OpenCollection
+    url: collections/useparagon.opencollection.json
+  - type: Documentation
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: Documentation
+    url: https://docs.useparagon.com/workflows/triggers
+  - type: Documentation
+    url: https://docs.useparagon.com/actionkit/overview
+  - type: Documentation
+    url: https://docs.useparagon.com/learn/managed-sync
+  - type: Documentation
+    url: https://www.useparagon.com/product/permissions-api
+- aid: useparagon:useparagon-permissions-api
   name: Paragon Permissions API
+  description: Access control checks for ingested data.
+  humanURL: https://docs.useparagon.com/api/making-api-requests
+  baseURL: https://zeus.useparagon.com
   tags:
   - Permissions
-  - Access Control
-  - Managed Sync
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.useparagon.com/product/permissions-api
-  baseURL: https://managed-sync.useparagon.com
   properties:
-  - url: https://www.useparagon.com/product/permissions-api
-    type: Documentation
-  - url: openapi/useparagon-openapi.yml
-    type: OpenAPI
-  - url: collections/useparagon.postman_collection.json
-    type: PostmanCollection
-  - url: collections/useparagon.opencollection.json
-    type: OpenCollection
-  description: The Permissions API enforces the underlying source-of-truth access
-    control on data ingested through Managed Sync, letting applications check whether
-    a user/role can access a given object before surfacing synced records (for
-    example, to power permission-aware RAG).
-- aid: useparagon:paragon-events-webhooks-api
-  name: Paragon Events and Webhooks API
-  tags:
-  - Events
-  - Webhooks
-  - Notifications
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.useparagon.com/resources/api-resources
+  - type: OpenAPI
+    url: openapi/useparagon-permissions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.useparagon.com/api/making-api-requests
+  - type: APIReference
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: PostmanCollection
+    url: collections/useparagon.postman_collection.json
+  - type: OpenCollection
+    url: collections/useparagon.opencollection.json
+  - type: Documentation
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: Documentation
+    url: https://docs.useparagon.com/workflows/triggers
+  - type: Documentation
+    url: https://docs.useparagon.com/actionkit/overview
+  - type: Documentation
+    url: https://docs.useparagon.com/learn/managed-sync
+  - type: Documentation
+    url: https://www.useparagon.com/product/permissions-api
+- aid: useparagon:useparagon-proxy-api
+  name: Paragon Proxy API
+  description: Passthrough requests to a connected user's third-party API.
+  humanURL: https://docs.useparagon.com/api/making-api-requests
   baseURL: https://zeus.useparagon.com
+  tags:
+  - Proxy
   properties:
-  - url: https://docs.useparagon.com/resources/api-resources
-    type: Documentation
-  - url: openapi/useparagon-openapi.yml
-    type: OpenAPI
-  - url: collections/useparagon.postman_collection.json
-    type: PostmanCollection
-  - url: collections/useparagon.opencollection.json
-    type: OpenCollection
-  description: Paragon delivers outbound event webhooks (such as record_updated from
-    Managed Sync and workflow/integration lifecycle events) to your application's
-    registered endpoints so you can react to changes in connected accounts and synced
-    data. This surface is webhook/event-driven rather than a request/response REST
-    resource.
+  - type: OpenAPI
+    url: openapi/useparagon-proxy-api-openapi.yml
+  - type: Documentation
+    url: https://docs.useparagon.com/api/making-api-requests
+  - type: APIReference
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: PostmanCollection
+    url: collections/useparagon.postman_collection.json
+  - type: OpenCollection
+    url: collections/useparagon.opencollection.json
+  - type: Documentation
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: Documentation
+    url: https://docs.useparagon.com/workflows/triggers
+  - type: Documentation
+    url: https://docs.useparagon.com/actionkit/overview
+  - type: Documentation
+    url: https://docs.useparagon.com/learn/managed-sync
+  - type: Documentation
+    url: https://www.useparagon.com/product/permissions-api
+- aid: useparagon:useparagon-users-api
+  name: Paragon Users API
+  description: Authenticated user and connected integration state.
+  humanURL: https://docs.useparagon.com/api/making-api-requests
+  baseURL: https://zeus.useparagon.com
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/useparagon-users-api-openapi.yml
+  - type: Documentation
+    url: https://docs.useparagon.com/api/making-api-requests
+  - type: APIReference
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: PostmanCollection
+    url: collections/useparagon.postman_collection.json
+  - type: OpenCollection
+    url: collections/useparagon.opencollection.json
+  - type: Documentation
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: Documentation
+    url: https://docs.useparagon.com/workflows/triggers
+  - type: Documentation
+    url: https://docs.useparagon.com/actionkit/overview
+  - type: Documentation
+    url: https://docs.useparagon.com/learn/managed-sync
+  - type: Documentation
+    url: https://www.useparagon.com/product/permissions-api
+- aid: useparagon:useparagon-workflows-api
+  name: Paragon Workflows API
+  description: Triggering workflows and checking execution status.
+  humanURL: https://docs.useparagon.com/api/making-api-requests
+  baseURL: https://zeus.useparagon.com
+  tags:
+  - Workflows
+  properties:
+  - type: OpenAPI
+    url: openapi/useparagon-workflows-api-openapi.yml
+  - type: Documentation
+    url: https://docs.useparagon.com/api/making-api-requests
+  - type: APIReference
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: PostmanCollection
+    url: collections/useparagon.postman_collection.json
+  - type: OpenCollection
+    url: collections/useparagon.opencollection.json
+  - type: Documentation
+    url: https://docs.useparagon.com/resources/api-resources
+  - type: Documentation
+    url: https://docs.useparagon.com/workflows/triggers
+  - type: Documentation
+    url: https://docs.useparagon.com/actionkit/overview
+  - type: Documentation
+    url: https://docs.useparagon.com/learn/managed-sync
+  - type: Documentation
+    url: https://www.useparagon.com/product/permissions-api
 common:
 - type: AgenticAccess
   url: agentic-access/useparagon-agentic-access.yml
