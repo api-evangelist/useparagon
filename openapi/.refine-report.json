@@ -1,0 +1,28 @@
+{
+  "provider": "useparagon",
+  "sources": [
+    "useparagon-actionkit-api-openapi.yml",
+    "useparagon-connect-api-openapi.yml",
+    "useparagon-integrations-api-openapi.yml",
+    "useparagon-managed-sync-api-openapi.yml",
+    "useparagon-permissions-api-openapi.yml",
+    "useparagon-proxy-api-openapi.yml",
+    "useparagon-users-api-openapi.yml",
+    "useparagon-workflows-api-openapi.yml"
+  ],
+  "outputs": [
+    "useparagon-actionkit-api-openapi.yml",
+    "useparagon-connect-api-openapi.yml",
+    "useparagon-integrations-api-openapi.yml",
+    "useparagon-managed-sync-api-openapi.yml",
+    "useparagon-permissions-api-openapi.yml",
+    "useparagon-proxy-api-openapi.yml",
+    "useparagon-users-api-openapi.yml",
+    "useparagon-workflows-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

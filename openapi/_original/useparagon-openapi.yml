@@ -1,0 +1,663 @@
+openapi: 3.0.3
+info:
+  title: Paragon API
+  description: >-
+    Unofficial, community-authored OpenAPI description of Paragon's embedded
+    integration platform APIs, compiled by API Evangelist from Paragon's public
+    documentation. Paragon exposes several distinct API surfaces across different
+    hosts: the Connect API (zeus.useparagon.com) for managing authenticated users,
+    connected credentials, integrations, workflow triggers, and proxied third-party
+    requests; ActionKit (actionkit.useparagon.com) for listing and running prebuilt
+    LLM-ready actions; and Managed Sync (sync.useparagon.com /
+    managed-sync.useparagon.com) for normalized third-party data ingestion and
+    permission checks.
+
+    Nearly all requests are authenticated with a Paragon User Token, an RS256-signed
+    JWT that your application signs with the private signing key from the Paragon
+    dashboard (Settings > SDK Setup) and that Paragon verifies with the matching
+    public key. In production most developers use Paragon's Connect SDK and Connect
+    Portal, which sit in front of this API; the raw HTTP surface documented here is
+    used for server-side and headless integrations.
+
+    Endpoint paths and payloads are approximate representations of Paragon's
+    documented behavior and should be verified against the official docs.
+  version: '1.0'
+  contact:
+    name: Paragon Support
+    url: https://docs.useparagon.com/
+  termsOfService: https://www.useparagon.com/legal/terms-of-service
+servers:
+  - url: https://zeus.useparagon.com
+    description: Connect API (users, credentials, integrations, workflow triggers, proxy)
+  - url: https://actionkit.useparagon.com
+    description: ActionKit API (list and run prebuilt actions)
+  - url: https://proxy.useparagon.com
+    description: Proxy API (alternate host for passthrough third-party requests)
+  - url: https://sync.useparagon.com
+    description: Managed Sync API (data ingestion pipelines)
+  - url: https://managed-sync.useparagon.com
+    description: Managed Sync records and Permissions API
+security:
+  - ParagonUserToken: []
+tags:
+  - name: Connect
+    description: Authenticated users and connected third-party credentials.
+  - name: Integrations
+    description: Integrations enabled for a Paragon project.
+  - name: Users
+    description: Authenticated user and connected integration state.
+  - name: Workflows
+    description: Triggering workflows and checking execution status.
+  - name: Proxy
+    description: Passthrough requests to a connected user's third-party API.
+  - name: ActionKit
+    description: Prebuilt, LLM-ready actions across connected SaaS providers.
+  - name: Managed Sync
+    description: Normalized third-party data ingestion pipelines and records.
+  - name: Permissions
+    description: Access control checks for ingested data.
+paths:
+  /projects/{projectId}/sdk/me:
+    get:
+      operationId: getAuthenticatedUser
+      tags:
+        - Users
+      summary: Get the authenticated user and integration state
+      description: >-
+        Returns the currently authenticated Paragon user (identified by the sub of
+        the Paragon User Token) together with the state of each of their connected
+        integrations. Equivalent to the SDK getUser() method.
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: The authenticated user and connected integration state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectedUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /projects/{projectId}/sdk/integrations:
+    get:
+      operationId: listIntegrations
+      tags:
+        - Integrations
+      summary: List integrations enabled for the project
+      description: >-
+        Returns the list of integrations enabled for the Paragon project identified
+        in the path, including Connect Portal configuration and the workflows
+        associated with each integration.
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: The integrations enabled for the project.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Integration'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /projects/{projectId}/sdk/resources/{resourceId}/connect:
+    post:
+      operationId: connectResource
+      tags:
+        - Connect
+      summary: Connect a user credential to a resource
+      description: >-
+        Connects the authenticated user's credentials to a Paragon resource /
+        integration. This is the server-side equivalent of initiating a connection
+        through the Connect Portal.
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - name: resourceId
+          in: path
+          required: true
+          description: The Paragon resource (integration) identifier.
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectResourceRequest'
+      responses:
+        '200':
+          description: The resulting credential / connection state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credential'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /projects/{projectId}/sdk/triggers/{workflowId}:
+    post:
+      operationId: triggerWorkflow
+      tags:
+        - Workflows
+      summary: Trigger a workflow (API Trigger)
+      description: >-
+        Triggers a Paragon workflow configured with an API Trigger for the
+        authenticated user. The request body is passed to the workflow as its input
+        payload. Returns an execution reference that can be used to check status.
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - name: workflowId
+          in: path
+          required: true
+          description: The identifier of the workflow to trigger.
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: Arbitrary JSON payload passed to the workflow.
+      responses:
+        '200':
+          description: The workflow execution was accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowExecution'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /projects/{projectId}/sdk/workflows/{workflowId}/executions/{executionId}:
+    get:
+      operationId: getWorkflowExecution
+      tags:
+        - Workflows
+      summary: Get workflow execution status
+      description: >-
+        Returns the status and result metadata for a specific workflow execution
+        triggered for the authenticated user.
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - name: workflowId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: executionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The workflow execution status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowExecution'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Execution not found.
+  /projects/{projectId}/sdk/proxy/{integrationType}/{apiPath}:
+    post:
+      operationId: proxyRequest
+      tags:
+        - Proxy
+      summary: Proxy a request to a connected third-party API
+      description: >-
+        Forwards a request to the connected user's third-party API for the given
+        integration type (for example, `salesforce` or `slack`) at the given
+        provider path. Paragon injects the user's stored OAuth credentials so your
+        application never handles the third-party token. GET, PUT, PATCH, and DELETE
+        are also supported against the same path. Also reachable at
+        https://proxy.useparagon.com.
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - name: integrationType
+          in: path
+          required: true
+          description: The integration type slug (e.g. salesforce, slack, googledrive).
+          schema:
+            type: string
+        - name: apiPath
+          in: path
+          required: true
+          description: The third-party provider API path to call (may contain slashes).
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The proxied response from the third-party API.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /projects/{projectId}/actions:
+    get:
+      operationId: listActions
+      tags:
+        - ActionKit
+      summary: List available ActionKit actions
+      description: >-
+        Returns the catalog of prebuilt, LLM-ready actions available to the
+        authenticated user across their connected integrations. The response is
+        designed to be handed to an AI agent as tool definitions.
+      servers:
+        - url: https://actionkit.useparagon.com
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - name: categories
+          in: query
+          required: false
+          description: Optional filter limiting the actions returned by category or provider.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The list of available actions and their JSON schemas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /projects/{projectId}/actions/run:
+    post:
+      operationId: runAction
+      tags:
+        - ActionKit
+      summary: Run an ActionKit action
+      description: >-
+        Executes a single prebuilt action for the authenticated user by name (for
+        example, `SLACK_SEND_MESSAGE`) with the action-specific parameters. Paragon
+        returns the API response of the last underlying request used to run the
+        action; the response shape varies by provider.
+      servers:
+        - url: https://actionkit.useparagon.com
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunActionRequest'
+      responses:
+        '200':
+          description: The result of running the action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunActionResponse'
+        '400':
+          description: Invalid action name or parameters.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/syncs:
+    post:
+      operationId: createSync
+      tags:
+        - Managed Sync
+      summary: Create a Managed Sync pipeline
+      description: >-
+        Enables a fully managed, normalized ingestion pipeline for the authenticated
+        user's connected integration (CRM, ticketing, file storage, or accounting).
+        Paragon performs an initial backfill and then keeps data current with
+        incremental syncs, emitting record_updated webhooks on change.
+      servers:
+        - url: https://sync.useparagon.com
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSyncRequest'
+      responses:
+        '201':
+          description: The created sync pipeline.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sync'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      operationId: listSyncs
+      tags:
+        - Managed Sync
+      summary: List Managed Sync pipelines
+      description: Lists the sync pipelines configured for the authenticated user.
+      servers:
+        - url: https://sync.useparagon.com
+      responses:
+        '200':
+          description: The list of syncs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sync'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /sync/{syncId}/records:
+    get:
+      operationId: listSyncRecords
+      tags:
+        - Managed Sync
+      summary: List normalized records for a sync
+      description: >-
+        Returns a page of normalized, unified records ingested by the given sync
+        pipeline. Use the returned cursor to page through the full replica.
+      servers:
+        - url: https://managed-sync.useparagon.com
+      parameters:
+        - name: syncId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: A page of normalized records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /sync/{syncId}/records/{recordId}/content:
+    get:
+      operationId: getRecordContent
+      tags:
+        - Managed Sync
+      summary: Get the content of a synced record
+      description: >-
+        Retrieves the underlying content for a single normalized record (for
+        example, the file body for a file-storage ingestion).
+      servers:
+        - url: https://managed-sync.useparagon.com
+      parameters:
+        - name: syncId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: recordId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The record content.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /permissions/check:
+    post:
+      operationId: checkPermission
+      tags:
+        - Permissions
+      summary: Check access to a synced object
+      description: >-
+        Evaluates whether a given user/role can access a specific object in the
+        source system, using the permissions ingested alongside Managed Sync data.
+        Used to enforce source-of-truth access control (for example, permission-aware
+        retrieval).
+      servers:
+        - url: https://managed-sync.useparagon.com
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PermissionCheckRequest'
+      responses:
+        '200':
+          description: The permission decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionCheckResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    ParagonUserToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >-
+        A Paragon User Token: an RS256-signed JWT whose subject identifies the end
+        user. Sign it with the private signing key from Settings > SDK Setup in the
+        Paragon dashboard; Paragon verifies it with the matching public key.
+  parameters:
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      description: The Paragon project identifier.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid Paragon User Token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    ConnectedUser:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The end-user identifier (the JWT subject).
+        integrations:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/IntegrationState'
+          description: Map of integration type to that integration's connection state.
+    IntegrationState:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        configuredWorkflows:
+          type: object
+          additionalProperties: true
+        credentialStatus:
+          type: string
+          enum: [VALID, INVALID, NOT_CONNECTED]
+    Integration:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The integration type slug (e.g. salesforce).
+        name:
+          type: string
+        connectPortalEnabled:
+          type: boolean
+        workflows:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    ConnectResourceRequest:
+      type: object
+      additionalProperties: true
+      description: Optional connection configuration for the resource.
+    Credential:
+      type: object
+      properties:
+        id:
+          type: string
+        provider:
+          type: string
+        status:
+          type: string
+          enum: [VALID, INVALID]
+        createdAt:
+          type: string
+          format: date-time
+    WorkflowExecution:
+      type: object
+      properties:
+        executionId:
+          type: string
+        workflowId:
+          type: string
+        status:
+          type: string
+          enum: [PENDING, RUNNING, SUCCEEDED, FAILED]
+        result:
+          type: object
+          additionalProperties: true
+        startedAt:
+          type: string
+          format: date-time
+    ActionList:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+    Action:
+      type: object
+      properties:
+        name:
+          type: string
+          example: SLACK_SEND_MESSAGE
+        description:
+          type: string
+        provider:
+          type: string
+          example: slack
+        parameters:
+          type: object
+          description: JSON Schema for the action's parameters.
+          additionalProperties: true
+    RunActionRequest:
+      type: object
+      required:
+        - action
+        - parameters
+      properties:
+        action:
+          type: string
+          example: SLACK_SEND_MESSAGE
+        parameters:
+          type: object
+          additionalProperties: true
+          example:
+            channel: C0123456789
+            text: Hello from ActionKit
+    RunActionResponse:
+      type: object
+      description: The provider API response of the last request used to run the action.
+      additionalProperties: true
+    CreateSyncRequest:
+      type: object
+      required:
+        - integration
+        - pipeline
+      properties:
+        integration:
+          type: string
+          description: The integration type to sync (e.g. salesforce).
+        pipeline:
+          type: string
+          description: The named ingestion pipeline (e.g. crm, tickets, files, accounting).
+        configuration:
+          type: object
+          additionalProperties: true
+    Sync:
+      type: object
+      properties:
+        id:
+          type: string
+        integration:
+          type: string
+        pipeline:
+          type: string
+        status:
+          type: string
+          enum: [INITIALIZING, BACKFILLING, ACTIVE, PAUSED, ERROR]
+        createdAt:
+          type: string
+          format: date-time
+    RecordPage:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        nextCursor:
+          type: string
+          nullable: true
+    PermissionCheckRequest:
+      type: object
+      required:
+        - object
+        - user
+      properties:
+        object:
+          type: string
+          description: The identifier of the object being accessed.
+        user:
+          type: string
+          description: The identifier of the user requesting access.
+        role:
+          type: string
+          description: Optional role to evaluate access for.
+    PermissionCheckResponse:
+      type: object
+      properties:
+        allowed:
+          type: boolean
+        reason:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
