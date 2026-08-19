@@ -1,0 +1,82 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Paragon ActionKit Workflows API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Workflows",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Trigger a workflow (API Trigger)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://zeus.useparagon.com/projects/:projectId/sdk/triggers/:workflowId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "The Paragon project identifier."
+              },
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the workflow to trigger."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Triggers a Paragon workflow configured with an API Trigger for the authenticated user. The request body is passed to the workflow as its input payload. Returns an execution reference that can be used to check status."
+        },
+        {
+          "info": {
+            "name": "Get workflow execution status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://zeus.useparagon.com/projects/:projectId/sdk/workflows/:workflowId/executions/:executionId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "The Paragon project identifier."
+              },
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "executionId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns the status and result metadata for a specific workflow execution triggered for the authenticated user."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

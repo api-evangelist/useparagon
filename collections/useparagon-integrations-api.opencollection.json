@@ -1,0 +1,43 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Paragon ActionKit Integrations API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Integrations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List integrations enabled for the project",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://zeus.useparagon.com/projects/:projectId/sdk/integrations",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "The Paragon project identifier."
+              }
+            ]
+          },
+          "docs": "Returns the list of integrations enabled for the Paragon project identified in the path, including Connect Portal configuration and the workflows associated with each integration."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

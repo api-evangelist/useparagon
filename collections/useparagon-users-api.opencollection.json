@@ -1,0 +1,43 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Paragon ActionKit Users API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the authenticated user and integration state",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://zeus.useparagon.com/projects/:projectId/sdk/me",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "The Paragon project identifier."
+              }
+            ]
+          },
+          "docs": "Returns the currently authenticated Paragon user (identified by the sub of the Paragon User Token) together with the state of each of their connected integrations. Equivalent to the SDK getUser() method."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

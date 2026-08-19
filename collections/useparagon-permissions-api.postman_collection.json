@@ -1,0 +1,203 @@
+{
+  "item": [
+    {
+      "id": "119a05ab-1396-4217-baef-d23de0ab0c27",
+      "name": "Permissions",
+      "description": {
+        "content": "Access control checks for ingested data.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5aca31e4-88c2-43da-a1a7-c69657e13872",
+          "name": "Check access to a synced object",
+          "request": {
+            "name": "Check access to a synced object",
+            "description": {
+              "content": "Evaluates whether a given user/role can access a specific object in the source system, using the permissions ingested alongside Managed Sync data. Used to enforce source-of-truth access control (for example, permission-aware retrieval).",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "permissions",
+                "check"
+              ],
+              "host": [
+                "managed-sync",
+                "useparagon",
+                "com"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"object\": \"<string>\",\n  \"user\": \"<string>\",\n  \"role\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ef6cf0b2-6298-45e7-849b-cffa30c3176b",
+              "name": "The permission decision.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "permissions",
+                    "check"
+                  ],
+                  "host": [
+                    "managed-sync",
+                    "useparagon",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"object\": \"<string>\",\n  \"user\": \"<string>\",\n  \"role\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"allowed\": true,\n  \"reason\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "911c19bf-eaf6-4f4c-b3c4-0b6e0c1081c3",
+              "name": "Missing or invalid Paragon User Token.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "permissions",
+                    "check"
+                  ],
+                  "host": [
+                    "managed-sync",
+                    "useparagon",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"object\": \"<string>\",\n  \"user\": \"<string>\",\n  \"role\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://zeus.useparagon.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "a04324d2-1e02-4cc4-b359-8db531d64a37",
+    "name": "Paragon ActionKit Permissions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Unofficial, community-authored OpenAPI description of Paragon's embedded integration platform APIs, compiled by API Evangelist from Paragon's public documentation. Paragon exposes several distinct API surfaces across different hosts: the Connect API (zeus.useparagon.com) for managing authenticated users, connected credentials, integrations, workflow triggers, and proxied third-party requests; ActionKit (actionkit.useparagon.com) for listing and running prebuilt LLM-ready actions; and Managed Sync (sync.useparagon.com / managed-sync.useparagon.com) for normalized third-party data ingestion and permission checks.\nNearly all requests are authenticated with a Paragon User Token, an RS256-signed JWT that your application signs with the private signing key from the Paragon dashboard (Settings > SDK Setup) and that Paragon verifies with the matching public key. In production most developers use Paragon's Connect SDK and Connect Portal, which sit in front of this API; the raw HTTP surface documented here is used for server-side and headless integrations.\nEndpoint paths and payloads are approximate representations of Paragon's documented behavior and should be verified against the official docs.\n\nContact Support:\n Name: Paragon Support",
+      "type": "text/plain"
+    }
+  }
+}

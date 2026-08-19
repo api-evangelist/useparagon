@@ -1,0 +1,59 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Paragon ActionKit Proxy API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Proxy",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Proxy a request to a connected third-party API",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://zeus.useparagon.com/projects/:projectId/sdk/proxy/:integrationType/:apiPath",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "The Paragon project identifier."
+              },
+              {
+                "name": "integrationType",
+                "value": "",
+                "type": "path",
+                "description": "The integration type slug (e.g. salesforce, slack, googledrive)."
+              },
+              {
+                "name": "apiPath",
+                "value": "",
+                "type": "path",
+                "description": "The third-party provider API path to call (may contain slashes)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Forwards a request to the connected user's third-party API for the given integration type (for example, `salesforce` or `slack`) at the given provider path. Paragon injects the user's stored OAuth credentials so your application never handles the third-party token. GET, PUT, PATCH, and DELETE are also supported against the same path. Also reachable at https://proxy.useparagon.com."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

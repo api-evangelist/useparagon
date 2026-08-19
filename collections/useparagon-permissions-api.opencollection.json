@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Paragon ActionKit Permissions API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Permissions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Check access to a synced object",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://zeus.useparagon.com/permissions/check",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Evaluates whether a given user/role can access a specific object in the source system, using the permissions ingested alongside Managed Sync data. Used to enforce source-of-truth access control (for example, permission-aware retrieval)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

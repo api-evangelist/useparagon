@@ -1,0 +1,101 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Paragon ActionKit Managed Sync API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Managed Sync",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Managed Sync pipelines",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://zeus.useparagon.com/api/syncs"
+          },
+          "docs": "Lists the sync pipelines configured for the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Create a Managed Sync pipeline",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://zeus.useparagon.com/api/syncs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enables a fully managed, normalized ingestion pipeline for the authenticated user's connected integration (CRM, ticketing, file storage, or accounting). Paragon performs an initial backfill and then keeps data current with incremental syncs, emitting record_updated webhooks on change."
+        },
+        {
+          "info": {
+            "name": "List normalized records for a sync",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://zeus.useparagon.com/sync/:syncId/records",
+            "params": [
+              {
+                "name": "syncId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns a page of normalized, unified records ingested by the given sync pipeline. Use the returned cursor to page through the full replica."
+        },
+        {
+          "info": {
+            "name": "Get the content of a synced record",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://zeus.useparagon.com/sync/:syncId/records/:recordId/content",
+            "params": [
+              {
+                "name": "syncId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "recordId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves the underlying content for a single normalized record (for example, the file body for a file-storage ingestion)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

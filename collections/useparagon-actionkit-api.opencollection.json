@@ -1,0 +1,72 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Paragon ActionKit API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "ActionKit",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List available ActionKit actions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://zeus.useparagon.com/projects/:projectId/actions",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "The Paragon project identifier."
+              },
+              {
+                "name": "categories",
+                "value": "",
+                "type": "query",
+                "description": "Optional filter limiting the actions returned by category or provider."
+              }
+            ]
+          },
+          "docs": "Returns the catalog of prebuilt, LLM-ready actions available to the authenticated user across their connected integrations. The response is designed to be handed to an AI agent as tool definitions."
+        },
+        {
+          "info": {
+            "name": "Run an ActionKit action",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://zeus.useparagon.com/projects/:projectId/actions/run",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "The Paragon project identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Executes a single prebuilt action for the authenticated user by name (for example, `SLACK_SEND_MESSAGE`) with the action-specific parameters. Paragon returns the API response of the last underlying request used to run the action; the response shape varies by provider."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
