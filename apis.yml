@@ -95,6 +95,8 @@ apis:
   humanURL: https://docs.useparagon.com/api/making-api-requests
   baseURL: https://zeus.useparagon.com
   tags:
+  - Integration
+  tags_raw:
   - Integrations
   properties:
   - type: OpenAPI
@@ -207,6 +209,8 @@ apis:
   humanURL: https://docs.useparagon.com/api/making-api-requests
   baseURL: https://zeus.useparagon.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
