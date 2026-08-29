@@ -7,6 +7,18 @@ description: Paragon is an embedded integration platform (embedded iPaaS) that l
   product. Developers use the Connect SDK/Portal plus a REST API (Connect API,
   ActionKit, and Managed Sync) to authenticate end users into 130+ SaaS providers,
   trigger workflows, run agentic actions, and ingest normalized third-party data.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
