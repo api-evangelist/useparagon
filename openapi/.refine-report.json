@@ -1,14 +1,7 @@
 {
   "provider": "useparagon",
   "sources": [
-    "useparagon-actionkit-api-openapi.yml",
-    "useparagon-connect-api-openapi.yml",
-    "useparagon-integrations-api-openapi.yml",
-    "useparagon-managed-sync-api-openapi.yml",
-    "useparagon-permissions-api-openapi.yml",
-    "useparagon-proxy-api-openapi.yml",
-    "useparagon-users-api-openapi.yml",
-    "useparagon-workflows-api-openapi.yml"
+    "_original/useparagon-openapi.yml"
   ],
   "outputs": [
     "useparagon-actionkit-api-openapi.yml",
@@ -23,6 +16,19 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "useparagon-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "useparagon-actionkit-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "useparagon-connect-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "useparagon-integrations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "useparagon-managed-sync-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "useparagon-permissions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "useparagon-proxy-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "useparagon-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "useparagon-workflows-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
