@@ -55,19 +55,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  parameters:
-    ProjectId:
-      name: projectId
-      in: path
-      required: true
-      description: The Paragon project identifier.
-      schema:
-        type: string
   schemas:
-    ConnectResourceRequest:
-      type: object
-      additionalProperties: true
-      description: Optional connection configuration for the resource.
     Error:
       type: object
       properties:
@@ -75,6 +63,10 @@ components:
           type: string
         code:
           type: string
+    ConnectResourceRequest:
+      type: object
+      additionalProperties: true
+      description: Optional connection configuration for the resource.
     Credential:
       type: object
       properties:
@@ -90,6 +82,14 @@ components:
         createdAt:
           type: string
           format: date-time
+  parameters:
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      description: The Paragon project identifier.
+      schema:
+        type: string
   responses:
     Unauthorized:
       description: Missing or invalid Paragon User Token.

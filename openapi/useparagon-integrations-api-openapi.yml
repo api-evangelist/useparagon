@@ -52,22 +52,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    ProjectId:
-      name: projectId
-      in: path
-      required: true
-      description: The Paragon project identifier.
-      schema:
-        type: string
   schemas:
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
     Integration:
       type: object
       properties:
@@ -83,6 +68,21 @@ components:
           items:
             type: object
             additionalProperties: true
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+  parameters:
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      description: The Paragon project identifier.
+      schema:
+        type: string
   securitySchemes:
     ParagonUserToken:
       type: http

@@ -138,6 +138,40 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+    CreateSyncRequest:
+      type: object
+      required:
+      - integration
+      - pipeline
+      properties:
+        integration:
+          type: string
+          description: The integration type to sync (e.g. salesforce).
+        pipeline:
+          type: string
+          description: The named ingestion pipeline (e.g. crm, tickets, files, accounting).
+        configuration:
+          type: object
+          additionalProperties: true
+    RecordPage:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        nextCursor:
+          type:
+          - string
+          - 'null'
     Sync:
       type: object
       properties:
@@ -158,40 +192,6 @@ components:
         createdAt:
           type: string
           format: date-time
-    RecordPage:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        nextCursor:
-          type:
-          - string
-          - 'null'
-    CreateSyncRequest:
-      type: object
-      required:
-      - integration
-      - pipeline
-      properties:
-        integration:
-          type: string
-          description: The integration type to sync (e.g. salesforce).
-        pipeline:
-          type: string
-          description: The named ingestion pipeline (e.g. crm, tickets, files, accounting).
-        configuration:
-          type: object
-          additionalProperties: true
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
   responses:
     Unauthorized:
       description: Missing or invalid Paragon User Token.
