@@ -49,14 +49,14 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid Paragon User Token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
+    PermissionCheckResponse:
+      type: object
+      properties:
+        allowed:
+          type: boolean
+        reason:
+          type: string
     PermissionCheckRequest:
       type: object
       required:
@@ -72,13 +72,6 @@ components:
         role:
           type: string
           description: Optional role to evaluate access for.
-    PermissionCheckResponse:
-      type: object
-      properties:
-        allowed:
-          type: boolean
-        reason:
-          type: string
     Error:
       type: object
       properties:
@@ -86,6 +79,13 @@ components:
           type: string
         code:
           type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid Paragon User Token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     ParagonUserToken:
       type: http

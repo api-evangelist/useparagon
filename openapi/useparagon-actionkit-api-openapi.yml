@@ -80,32 +80,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    RunActionResponse:
-      type: object
-      description: The provider API response of the last request used to run the action.
-      additionalProperties: true
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
-    Action:
-      type: object
-      properties:
-        name:
-          type: string
-          example: SLACK_SEND_MESSAGE
-        description:
-          type: string
-        provider:
-          type: string
-          example: slack
-        parameters:
-          type: object
-          description: JSON Schema for the action's parameters.
-          additionalProperties: true
     RunActionRequest:
       type: object
       required:
@@ -128,6 +102,39 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Action'
+    Action:
+      type: object
+      properties:
+        name:
+          type: string
+          example: SLACK_SEND_MESSAGE
+        description:
+          type: string
+        provider:
+          type: string
+          example: slack
+        parameters:
+          type: object
+          description: JSON Schema for the action's parameters.
+          additionalProperties: true
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+    RunActionResponse:
+      type: object
+      description: The provider API response of the last request used to run the action.
+      additionalProperties: true
+  responses:
+    Unauthorized:
+      description: Missing or invalid Paragon User Token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     ProjectId:
       name: projectId
@@ -136,13 +143,6 @@ components:
       description: The Paragon project identifier.
       schema:
         type: string
-  responses:
-    Unauthorized:
-      description: Missing or invalid Paragon User Token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     ParagonUserToken:
       type: http

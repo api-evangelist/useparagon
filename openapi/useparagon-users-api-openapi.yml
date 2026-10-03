@@ -43,25 +43,14 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid Paragon User Token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
-    ConnectedUser:
-      type: object
-      properties:
-        userId:
-          type: string
-          description: The end-user identifier (the JWT subject).
-        integrations:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/IntegrationState'
-          description: Map of integration type to that integration's connection state.
     IntegrationState:
       type: object
       properties:
@@ -76,6 +65,24 @@ components:
           - VALID
           - INVALID
           - NOT_CONNECTED
+    ConnectedUser:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The end-user identifier (the JWT subject).
+        integrations:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/IntegrationState'
+          description: Map of integration type to that integration's connection state.
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
   parameters:
     ProjectId:
       name: projectId
@@ -84,13 +91,6 @@ components:
       description: The Paragon project identifier.
       schema:
         type: string
-  responses:
-    Unauthorized:
-      description: Missing or invalid Paragon User Token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     ParagonUserToken:
       type: http

@@ -137,6 +137,13 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid Paragon User Token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
     Error:
       type: object
@@ -192,13 +199,6 @@ components:
         createdAt:
           type: string
           format: date-time
-  responses:
-    Unauthorized:
-      description: Missing or invalid Paragon User Token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     ParagonUserToken:
       type: http
