@@ -44,6 +44,13 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
     ConnectedUser:
       type: object
       properties:
@@ -69,13 +76,13 @@ components:
           - VALID
           - INVALID
           - NOT_CONNECTED
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid Paragon User Token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     ProjectId:
       name: projectId
@@ -84,13 +91,6 @@ components:
       description: The Paragon project identifier.
       schema:
         type: string
-  responses:
-    Unauthorized:
-      description: Missing or invalid Paragon User Token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     ParagonUserToken:
       type: http

@@ -138,6 +138,21 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    CreateSyncRequest:
+      type: object
+      required:
+      - integration
+      - pipeline
+      properties:
+        integration:
+          type: string
+          description: The integration type to sync (e.g. salesforce).
+        pipeline:
+          type: string
+          description: The named ingestion pipeline (e.g. crm, tickets, files, accounting).
+        configuration:
+          type: object
+          additionalProperties: true
     RecordPage:
       type: object
       properties:
@@ -150,6 +165,13 @@ components:
           type:
           - string
           - 'null'
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
     Sync:
       type: object
       properties:
@@ -170,28 +192,6 @@ components:
         createdAt:
           type: string
           format: date-time
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
-    CreateSyncRequest:
-      type: object
-      required:
-      - integration
-      - pipeline
-      properties:
-        integration:
-          type: string
-          description: The integration type to sync (e.g. salesforce).
-        pipeline:
-          type: string
-          description: The named ingestion pipeline (e.g. crm, tickets, files, accounting).
-        configuration:
-          type: object
-          additionalProperties: true
   responses:
     Unauthorized:
       description: Missing or invalid Paragon User Token.

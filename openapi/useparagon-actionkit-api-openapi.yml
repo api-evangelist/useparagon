@@ -80,6 +80,17 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    RunActionResponse:
+      type: object
+      description: The provider API response of the last request used to run the action.
+      additionalProperties: true
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
     Action:
       type: object
       properties:
@@ -95,10 +106,6 @@ components:
           type: object
           description: JSON Schema for the action's parameters.
           additionalProperties: true
-    RunActionResponse:
-      type: object
-      description: The provider API response of the last request used to run the action.
-      additionalProperties: true
     ActionList:
       type: object
       properties:
@@ -106,13 +113,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Action'
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
     RunActionRequest:
       type: object
       required:
@@ -128,6 +128,13 @@ components:
           example:
             channel: C0123456789
             text: Hello from ActionKit
+  responses:
+    Unauthorized:
+      description: Missing or invalid Paragon User Token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     ProjectId:
       name: projectId
@@ -136,13 +143,6 @@ components:
       description: The Paragon project identifier.
       schema:
         type: string
-  responses:
-    Unauthorized:
-      description: Missing or invalid Paragon User Token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     ParagonUserToken:
       type: http

@@ -57,6 +57,20 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+    PermissionCheckResponse:
+      type: object
+      properties:
+        allowed:
+          type: boolean
+        reason:
+          type: string
     PermissionCheckRequest:
       type: object
       required:
@@ -72,20 +86,6 @@ components:
         role:
           type: string
           description: Optional role to evaluate access for.
-    PermissionCheckResponse:
-      type: object
-      properties:
-        allowed:
-          type: boolean
-        reason:
-          type: string
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
   securitySchemes:
     ParagonUserToken:
       type: http
