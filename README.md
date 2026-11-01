@@ -1,4 +1,4 @@
-# Paragon (useparagon)
+# Paragon
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,219 +66,130 @@
 
 Paragon is an embedded integration platform (embedded iPaaS) that lets B2B SaaS companies build and ship native, third-party integrations inside their own product. Developers use the Connect SDK/Portal plus a REST API (Connect API, ActionKit, and Managed Sync) to authenticate end users into 130+ SaaS providers, trigger workflows, run agentic actions, and ingest normalized third-party data.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/useparagon/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/useparagon/refs/heads/main/apis.yml)
+**Areas:** Integration · iPaaS · Embedded Integrations · Workflows · ActionKit · Managed Sync · AI Agents
 
-Nearly all requests are authenticated with a Paragon User Token — an RS256-signed JWT that your application signs with the private signing key from the Paragon dashboard (Settings > SDK Setup) and that Paragon verifies with the matching public key. In production, most developers use Paragon's Connect SDK and Connect Portal, which sit in front of these APIs; the raw HTTP surface documented here is used for server-side and headless integrations.
+## Paragon on APIs.io
 
-## Tags
+Everything profiled for Paragon is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/useparagon/](https://apis.io/providers/useparagon/)** — or go straight to one of the APIs or properties below.
 
-- Integration
-- iPaaS
-- Embedded Integrations
-- Workflows
-- ActionKit
-- Managed Sync
-- AI Agents
+### APIs (8)
 
-## Timestamps
+- [Paragon ActionKit API](https://apis.io/apis/useparagon/useparagon-actionkit-api/) — Prebuilt, LLM-ready actions across connected SaaS providers.
+- [Paragon Connect API](https://apis.io/apis/useparagon/useparagon-connect-api/) — Authenticated users and connected third-party credentials.
+- [Paragon Integrations API](https://apis.io/apis/useparagon/useparagon-integrations-api/) — Integrations enabled for a Paragon project.
+- [Paragon Managed Sync API](https://apis.io/apis/useparagon/useparagon-managed-sync-api/) — Normalized third-party data ingestion pipelines and records.
+- [Paragon Permissions API](https://apis.io/apis/useparagon/useparagon-permissions-api/) — Access control checks for ingested data.
+- [Paragon Proxy API](https://apis.io/apis/useparagon/useparagon-proxy-api/) — Passthrough requests to a connected user's third-party API.
+- [Paragon Users API](https://apis.io/apis/useparagon/useparagon-users-api/) — Authenticated user and connected integration state.
+- [Paragon Workflows API](https://apis.io/apis/useparagon/useparagon-workflows-api/) — Triggering workflows and checking execution status.
 
-- **Created:** 2026-07-01
-- **Modified:** 2026-07-01
+### Published properties
 
-## APIs
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-### Paragon Connect API
+#### Agentic access (1)
 
-The Connect API manages authenticated end users and their connected third-party credentials for a Paragon project. Requests are authenticated with a Paragon User Token (an RS256-signed JWT) and target `/projects/{projectId}/sdk/...` paths for resource connection and user state. In practice the Connect SDK and Connect Portal are the primary front-ends over this API.
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- **Human URL:** [https://docs.useparagon.com/api/making-api-requests](https://docs.useparagon.com/api/making-api-requests)
-- **Base URL:** `https://zeus.useparagon.com`
+- [Useparagon Agentic Access](https://apis.io/agentic-access/useparagon/useparagon-agentic-access/)
 
-#### Tags
+#### Collections (9)
 
-- Connect
-- Authentication
-- Credentials
+Postman and Open Collection request collections.
 
-#### Properties
+- [Paragon API](https://apis.io/collections/useparagon/open-useparagon/)
+- [Paragon ActionKit API](https://apis.io/collections/useparagon/open-useparagon-actionkit-api/)
+- [Paragon ActionKit Connect API](https://apis.io/collections/useparagon/open-useparagon-connect-api/)
+- [Paragon ActionKit Integrations API](https://apis.io/collections/useparagon/open-useparagon-integrations-api/)
+- [Paragon ActionKit Managed Sync API](https://apis.io/collections/useparagon/open-useparagon-managed-sync-api/)
+- [Paragon ActionKit Permissions API](https://apis.io/collections/useparagon/open-useparagon-permissions-api/)
+- [Paragon ActionKit Proxy API](https://apis.io/collections/useparagon/open-useparagon-proxy-api/)
+- [Paragon ActionKit Users API](https://apis.io/collections/useparagon/open-useparagon-users-api/)
+- [Paragon ActionKit Workflows API](https://apis.io/collections/useparagon/open-useparagon-workflows-api/)
 
-- [Documentation](https://docs.useparagon.com/api/making-api-requests)
-- [API Reference](https://docs.useparagon.com/resources/api-resources)
-- [OpenAPI](openapi/useparagon-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/useparagon.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/useparagon.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Security (2)
 
-### Paragon Integrations API
+Authentication, trust centre, and vulnerability disclosure.
 
-Returns the list of integrations enabled for a Paragon project, including Connect Portal configuration and associated workflows, so applications can render available connectors and their state.
+- [Useparagon Authentication](https://apis.io/security/useparagon/useparagon-authentication/)
+- [Useparagon Domain Security](https://apis.io/security/useparagon/useparagon-domain-security/)
 
-- **Human URL:** [https://docs.useparagon.com/resources/api-resources](https://docs.useparagon.com/resources/api-resources)
-- **Base URL:** `https://zeus.useparagon.com`
+#### Plans and pricing (1)
 
-#### Tags
+Published plans, tiers and prices.
 
-- Integrations
-- Connectors
-- Metadata
+- [Useparagon Plans Pricing](https://apis.io/plans/useparagon/useparagon-plans-pricing/)
 
-#### Properties
+#### Rate limits (1)
 
-- [Documentation](https://docs.useparagon.com/resources/api-resources)
-- [OpenAPI](openapi/useparagon-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/useparagon.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/useparagon.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Published request limits.
 
-### Paragon Users API
+- [Useparagon Rate Limits](https://apis.io/rate-limits/useparagon/useparagon-rate-limits/)
 
-Retrieves the currently authenticated user and their connected integration state (the same data surfaced by the SDK `getUser()` method), keyed by the user id embedded in the Paragon User Token.
+#### FinOps (1)
 
-- **Human URL:** [https://docs.useparagon.com/resources/api-resources](https://docs.useparagon.com/resources/api-resources)
-- **Base URL:** `https://zeus.useparagon.com`
+What the API costs to run, by operation.
 
-#### Tags
+- [Useparagon Finops](https://apis.io/finops/useparagon/useparagon-finops/)
 
-- Users
-- Connected Accounts
-- State
+## Where to find this API
 
-#### Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-- [Documentation](https://docs.useparagon.com/resources/api-resources)
-- [OpenAPI](openapi/useparagon-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/useparagon.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/useparagon.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Paragon Workflows API
-
-Triggers Paragon workflows over HTTP (API Trigger) and checks workflow execution status. Workflows can be started from application events, CRON schedules, third-party webhooks, or an authenticated HTTP request carrying a Paragon User Token.
-
-- **Human URL:** [https://docs.useparagon.com/workflows/triggers](https://docs.useparagon.com/workflows/triggers)
-- **Base URL:** `https://zeus.useparagon.com`
-
-#### Tags
-
-- Workflows
-- Triggers
-- Automation
-
-#### Properties
-
-- [Documentation](https://docs.useparagon.com/workflows/triggers)
-- [OpenAPI](openapi/useparagon-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/useparagon.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/useparagon.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Paragon Proxy API
-
-A passthrough proxy that forwards requests to a connected user's third-party API without your application handling that provider's OAuth tokens. Requests go to `/projects/{projectId}/sdk/proxy/{integrationType}/{apiPath}` and Paragon injects the user's stored credentials. Also available at `proxy.useparagon.com`.
-
-- **Human URL:** [https://docs.useparagon.com/api/making-api-requests](https://docs.useparagon.com/api/making-api-requests)
-- **Base URL:** `https://zeus.useparagon.com`
-
-#### Tags
-
-- Proxy
-- Passthrough
-- Third-Party APIs
-
-#### Properties
-
-- [Documentation](https://docs.useparagon.com/api/making-api-requests)
-- [OpenAPI](openapi/useparagon-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/useparagon.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/useparagon.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Paragon ActionKit API
-
-ActionKit exposes thousands of prebuilt, LLM-ready actions across 130+ SaaS providers as a single API for AI agents. List available actions with `GET /projects/{projectId}/actions` and execute one with `POST /projects/{projectId}/actions/run` by passing an action name (e.g. `SLACK_SEND_MESSAGE`) and parameters.
-
-- **Human URL:** [https://docs.useparagon.com/actionkit/overview](https://docs.useparagon.com/actionkit/overview)
-- **Base URL:** `https://actionkit.useparagon.com`
-
-#### Tags
-
-- ActionKit
-- AI Agents
-- Actions
-
-#### Properties
-
-- [Documentation](https://docs.useparagon.com/actionkit/overview)
-- [OpenAPI](openapi/useparagon-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/useparagon.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/useparagon.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Paragon Managed Sync API
-
-Managed Sync provides fully managed, normalized third-party data ingestion pipelines. The Sync API enables full CRM, ticketing, file-storage, and accounting ingestions with a couple of calls (create sync, pull records) plus `record_updated` webhooks for change data capture; requests target `sync.useparagon.com` / `managed-sync.useparagon.com`.
-
-- **Human URL:** [https://docs.useparagon.com/learn/managed-sync](https://docs.useparagon.com/learn/managed-sync)
-- **Base URL:** `https://sync.useparagon.com`
-
-#### Tags
-
-- Managed Sync
-- Data Ingestion
-- CDC
-
-#### Properties
-
-- [Documentation](https://docs.useparagon.com/learn/managed-sync)
-- [OpenAPI](openapi/useparagon-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/useparagon.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/useparagon.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Paragon Permissions API
-
-The Permissions API enforces the underlying source-of-truth access control on data ingested through Managed Sync, letting applications check whether a user/role can access a given object before surfacing synced records (for example, to power permission-aware RAG).
-
-- **Human URL:** [https://www.useparagon.com/product/permissions-api](https://www.useparagon.com/product/permissions-api)
-- **Base URL:** `https://managed-sync.useparagon.com`
-
-#### Tags
-
-- Permissions
-- Access Control
-- Managed Sync
-
-#### Properties
-
-- [Documentation](https://www.useparagon.com/product/permissions-api)
-- [OpenAPI](openapi/useparagon-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/useparagon.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/useparagon.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Paragon Events and Webhooks API
-
-Paragon delivers outbound event webhooks (such as `record_updated` from Managed Sync and workflow/integration lifecycle events) to your application's registered endpoints so you can react to changes in connected accounts and synced data. This surface is webhook/event-driven rather than a request/response REST resource.
-
-- **Human URL:** [https://docs.useparagon.com/resources/api-resources](https://docs.useparagon.com/resources/api-resources)
-- **Base URL:** `https://zeus.useparagon.com`
-
-#### Tags
-
-- Events
-- Webhooks
-- Notifications
-
-#### Properties
-
-- [Documentation](https://docs.useparagon.com/resources/api-resources)
-- [OpenAPI](openapi/useparagon-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/useparagon.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/useparagon.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [GitHub Organization](https://github.com/useparagon)
-- [LinkedIn](https://www.linkedin.com/company/useparagon)
 - [Website](https://www.useparagon.com/)
 - [Documentation](https://docs.useparagon.com/)
-- [Plans](plans/useparagon-plans-pricing.yml)
-- [Rate Limits](rate-limits/useparagon-rate-limits.yml)
-- [Fin Ops](finops/useparagon-finops.yml)
+- [Blog](https://www.useparagon.com/blog)
+- [GitHub](https://github.com/useparagon)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 27.4** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 50.4 |
+| Contract governance | 0.0 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 32.1 |
+| Access clarity | 7.9 |
+
+**Agent readiness 17.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 11.8** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/useparagon/](https://apis.io/providers/useparagon/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Paragon: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/useparagon/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
